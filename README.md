@@ -43,6 +43,41 @@ timeMap.get("foo", 4);         // return "bar2"
 timeMap.get("foo", 5);         // return "bar2"
 ``` 
 
+# Implementation 1 : store the (time,value) pair in TreeMap , but TLE
+```java
+class TimeMap {
+    Map<String, TreeMap<Integer,String>> timeMap;
+    public TimeMap() {
+        this.timeMap = new HashMap<>();
+    }
+    
+    public void set(String key, String value, int timestamp) {
+        this.timeMap.putIfAbsent(key, new TreeMap<Integer,String>());
+        this.timeMap.get(key).put(timestamp,value);
+    }
+    
+    public String get(String key, int timestamp) {
+        if(!this.timeMap.containsKey(key))
+            return "";
+        int lastTimestamp = -1;
+        TreeMap<Integer,String> valueMap = this.timeMap.get(key);
+        for(int time : valueMap.keySet()) {
+            if(time > timestamp)
+                break;
+            lastTimestamp = time;
+        }
+        return lastTimestamp != -1 ? valueMap.get(lastTimestamp) : "";
+    }
+}
+
+/**
+ * Your TimeMap object will be instantiated and called as such:
+ * TimeMap obj = new TimeMap();
+ * obj.set(key,value,timestamp);
+ * String param_2 = obj.get(key,timestamp);
+ */
+```
+
 ## Implementation :
 ```java
 
